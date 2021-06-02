@@ -4,14 +4,14 @@ import useSWR from "swr";
 import { dateTimeFullFormat } from "../format";
 import Loading from "./Loading";
 
-function fetcherJson(...args) {
-  return fetch(...args).then((r) => r.json());
+function fetcherText(...args) {
+  return fetch(...args).then((r) => r.text());
 }
 
 export default function SheetData() {
   const { data, error } = useSWR(
     `/wuhanvirustw/data/raw/1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4.csv`,
-    fetcherJson,
+    fetcherText,
     {
       refreshInterval: 5 * 60 * 1000,
     }
