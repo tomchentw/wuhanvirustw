@@ -11,8 +11,8 @@ const RAW_DIR = path.join(DIRNAME, `../public/data/raw`);
 const INTERVAL = 5 * 60 * 1000; // 5 minute
 const URL_LIST = [
   {
-    pathname: `1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4.json`,
-    url: `https://spreadsheets.google.com/feeds/list/1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4/1/public/basic?alt=json`,
+    pathname: `1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4.csv`,
+    url: `https://docs.google.com/spreadsheets/d/1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4/export?gid\u003d8838146\u0026format\u003dcsv`,
   },
 ];
 
