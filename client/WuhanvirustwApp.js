@@ -16,9 +16,13 @@ const theme = Chakra.extendTheme({
 });
 
 export default function WuhanvirustwApp({ Component, pageProps }) {
-  const { data: buildId, error } = useSWR(`/BUILD_ID`, fetcherText, {
-    refreshInterval: 1 * 60 * 60 * 1000, // Hourly
-  });
+  const { data: buildId, error } = useSWR(
+    `/wuhanvirustw/BUILD_ID`,
+    fetcherText,
+    {
+      refreshInterval: 1 * 60 * 60 * 1000, // Hourly
+    }
+  );
   const prevBuildIdRef = React.useRef(buildId);
   const [newVersionAvailable, setNewVersionAvailable] = React.useState(false);
   React.useEffect(() => {
