@@ -10,7 +10,7 @@ function fetcherJson(...args) {
 
 export default function SheetData() {
   const { data, error } = useSWR(
-    `/wuhanvirustw/data/raw/1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4.json`,
+    `/wuhanvirustw/data/raw/1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4.csv`,
     fetcherJson,
     {
       refreshInterval: 5 * 60 * 1000,
@@ -31,7 +31,7 @@ export default function SheetData() {
         </Chakra.Text>
       </Chakra.Heading>
       <Chakra.Box as="pre" py={4}>
-        <Chakra.Code width="full">{JSON.stringify(data, null, 2)}</Chakra.Code>
+        <Chakra.Code width="full">{data}</Chakra.Code>
       </Chakra.Box>
     </React.Fragment>
   );
