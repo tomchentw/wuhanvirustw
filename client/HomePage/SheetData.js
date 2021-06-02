@@ -16,6 +16,12 @@ export default function SheetData() {
       refreshInterval: 5 * 60 * 1000,
     }
   );
+  const lastEntryDatetime = React.useMemo(() => {
+    if (!data || "string" !== typeof data) {
+      return false;
+    }
+    return data.split("\n").pop().split(",").shift();
+  }, [data]);
 
   if (error) return <div>failed to load</div>;
   if (!data) {
@@ -24,7 +30,7 @@ export default function SheetData() {
   return (
     <React.Fragment>
       <Chakra.Heading as="h4" size="md" textAlign="right">
-        現時 {dateTimeFullFormat.format(new Date())}
+        最新資料 {lastEntryDatetime}
         <br />
         <Chakra.Text as="i" fontSize="sm">
           資料來源每五分鐘自動更新
