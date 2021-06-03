@@ -28,7 +28,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-
       - run: pnpm install --frozen-lockfile
-      - run: pnpm cron crawl
+      - run: pnpm crawl
       - name: Update data/raw
         uses: peaceiris/actions-gh-pages@v3
         with:
