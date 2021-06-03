@@ -1,6 +1,7 @@
 import * as Chakra from "@chakra-ui/react";
 import * as React from "react";
 import Link from "next/link";
+import { isValidAsRegExp } from "./validator";
 
 export default function SheetTable({ lastEntryDatetime, header, data }) {
   return (
@@ -28,11 +29,11 @@ export default function SheetTable({ lastEntryDatetime, header, data }) {
             <Chakra.Tr key={index}>
               {list.map((text, index) => (
                 <Chakra.Td key={index}>
-                  {index === 1 ? (
+                  {index === 1 && isValidAsRegExp(text) ? (
                     <Link
                       href={{
-                        pathname: "/company/[encodedSlug]",
-                        query: { encodedSlug: encodeURIComponent(text) },
+                        pathname: "/company/[company]",
+                        query: { company: text },
                       }}
                       passHref
                     >

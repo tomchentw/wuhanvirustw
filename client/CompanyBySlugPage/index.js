@@ -4,12 +4,12 @@ import { useRouter } from "next/router";
 import Loading from "../Loading";
 import Store from "../Store";
 import SheetTable from "../SheetTable";
+import { isValidAsRegExp } from "../validator";
 
 export default function CompanyBySlugPage({ initialData }) {
   const {
-    query: { encodedSlug },
+    query: { company },
   } = useRouter();
-  const slug = decodeURIComponent(encodedSlug);
   const { q5Y5hWData } = React.useContext(Store);
   const [lastEntryDatetime, filteredData] = React.useMemo(() => {
     if (!q5Y5hWData || q5Y5hWData.length === 0) {
@@ -17,14 +17,9 @@ export default function CompanyBySlugPage({ initialData }) {
     }
     return [
       q5Y5hWData[q5Y5hWData.length - 1][0],
-      filterDataCompanyBySlug(q5Y5hWData, slug),
+      filterDataCompanyBySlug(q5Y5hWData, company),
     ];
-  }, [q5Y5hWData, slug]);
-  try {
-    if (typeof (filteredData || initialData) === "undefined") {
-      console.error(slug, initialData);
-    }
-  } catch {}
+  }, [q5Y5hWData, company]);
 
   return (
     <React.Fragment>
@@ -58,49 +53,36 @@ export default function CompanyBySlugPage({ initialData }) {
   );
 }
 
-function filterDataCompanyBySlug(rawData, slug) {
-  return rawData.filter(([, company]) => company.match(new RegExp(slug, "i")));
+function filterDataCompanyBySlug(rawData, company) {
+  return rawData.filter((list) => list[1].match(new RegExp(company, "i")));
 }
 
 export async function getStaticPaths() {
   const rawData = require("../../public/data/raw/1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4.json");
   const countBySlugName = new Map();
   rawData.forEach(([, company], index) => {
-    if (index < 2 || !company || !company.trim()) {
+    if (index < 2 || !isValidAsRegExp(company)) {
       return;
     }
-    const encodedSlug = encodeURIComponent(company.toLowerCase());
-    if (encodedSlug.length > 100) {
-      return;
-    }
-    try {
-      new RegExp(encodedSlug);
-    } catch {
-      return;
-    }
-    countBySlugName.set(
-      encodedSlug,
-      1 + (countBySlugName.get(encodedSlug) || 0)
-    );
+    countBySlugName.set(company, 1 + (countBySlugName.get(company) || 0));
   });
   return {
     paths: [...countBySlugName.entries()]
-      .sort((a, b) => a[1] - b[1])
+      .sort((a, b) => b[1] - a[1])
       .slice(0, 300)
-      .map(([encodedSlug, count]) => ({
-        params: { encodedSlug },
+      .map(([company, count]) => ({
+        params: { company },
       })),
     fallback: false,
   };
 }
 
-export async function getStaticProps({ params: { encodedSlug } }) {
-  const slug = decodeURIComponent(encodedSlug);
+export async function getStaticProps({ params: { company } }) {
   const rawData = require("../../public/data/raw/1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4.json");
   /**
    * Return a subset of data
    */
-  const initialData = filterDataCompanyBySlug(rawData, slug);
+  const initialData = filterDataCompanyBySlug(rawData, company);
   const props = {
     initialData,
   };
