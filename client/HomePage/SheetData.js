@@ -4,23 +4,23 @@ import useSWR from "swr";
 import { dateTimeFullFormat } from "../format";
 import Loading from "./Loading";
 
-function fetcherText(...args) {
-  return fetch(...args).then((r) => r.text());
+function fetcherJson(...args) {
+  return fetch(...args).then((r) => r.json());
 }
 
 export default function SheetData() {
   const { data, error } = useSWR(
-    `/wuhanvirustw/data/raw/1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4.csv`,
-    fetcherText,
+    `/wuhanvirustw/data/raw/1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4.json`,
+    fetcherJson,
     {
       refreshInterval: 5 * 60 * 1000,
     }
   );
   const lastEntryDatetime = React.useMemo(() => {
-    if (!data || "string" !== typeof data) {
+    if (!data || data.length === 0) {
       return false;
     }
-    return data.split("\n").pop().split(",").shift();
+    return data[data.length - 1][0];
   }, [data]);
 
   if (error) return <div>failed to load</div>;
@@ -36,7 +36,29 @@ export default function SheetData() {
           資料來源每五分鐘自動更新
         </Chakra.Text>
       </Chakra.Heading>
-      <Chakra.Box as="pre" py={4}>
+      <Chakra.Table variant="striped">
+        <Chakra.TableCaption />
+        <Chakra.Thead>
+          {data.slice(0, 2).map((list, index) => (
+            <Chakra.Tr key={index}>
+              {list.map((text, index) => (
+                <Chakra.Th key={index}>{text}</Chakra.Th>
+              ))}
+            </Chakra.Tr>
+          ))}
+        </Chakra.Thead>
+        <Chakra.Tbody>
+          {data.slice(2).map((list, index) => (
+            <Chakra.Tr key={index}>
+              {list.map((text, index) => (
+                <Chakra.Td key={index}>{text}</Chakra.Td>
+              ))}
+            </Chakra.Tr>
+          ))}
+        </Chakra.Tbody>
+        <Chakra.Tfoot />
+      </Chakra.Table>
+      <Chakra.Box as="pre" py={4} display="none">
         <Chakra.Code width="full">{data}</Chakra.Code>
       </Chakra.Box>
     </React.Fragment>
