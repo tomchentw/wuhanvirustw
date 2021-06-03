@@ -1,5 +1,4 @@
 import * as Chakra from "@chakra-ui/react";
-import dynamic from "next/dynamic";
 import * as React from "react";
 import Loading from "../Loading";
 import Store from "../Store";

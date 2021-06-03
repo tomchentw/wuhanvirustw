@@ -1,5 +1,6 @@
 import * as Chakra from "@chakra-ui/react";
 import * as React from "react";
+import Link from "next/link";
 
 export default function SheetTable({ lastEntryDatetime, header, data }) {
   return (
@@ -14,7 +15,7 @@ export default function SheetTable({ lastEntryDatetime, header, data }) {
       <Chakra.Table variant="striped">
         <Chakra.TableCaption />
         <Chakra.Thead>
-          {header.map((list, index) => (
+          {header?.map((list, index) => (
             <Chakra.Tr key={index}>
               {list.map((text, index) => (
                 <Chakra.Th key={index}>{text}</Chakra.Th>
@@ -23,10 +24,24 @@ export default function SheetTable({ lastEntryDatetime, header, data }) {
           ))}
         </Chakra.Thead>
         <Chakra.Tbody>
-          {data.map((list, index) => (
+          {data?.map((list, index) => (
             <Chakra.Tr key={index}>
               {list.map((text, index) => (
-                <Chakra.Td key={index}>{text}</Chakra.Td>
+                <Chakra.Td key={index}>
+                  {index === 1 ? (
+                    <Link
+                      href={{
+                        pathname: "/company/[encodedSlug]",
+                        query: { encodedSlug: encodeURIComponent(text) },
+                      }}
+                      passHref
+                    >
+                      <Chakra.Link>{text}</Chakra.Link>
+                    </Link>
+                  ) : (
+                    text
+                  )}
+                </Chakra.Td>
               ))}
             </Chakra.Tr>
           ))}
