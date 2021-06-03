@@ -6,6 +6,7 @@
     "@vercel/fetch": "^6.1.0",
     "bunyan": "^1.8.15",
     "cross-spawn": "^7.0.3",
+    "htmlparser2": "^6.1.0",
     "lodash-es": "^4.17.21",
     "node-fetch": "^2.6.1"
   }
