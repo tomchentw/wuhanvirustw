@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Loading from "../Loading";
 import Store from "../Store";
 import SheetTable from "../SheetTable";
-import { isValidAsRegExp } from "../validator";
+import { isValidName, toSlug } from "../companyUtil";
 
 export default function CompanyBySlugPage({ initialData }) {
   const {
@@ -60,16 +60,16 @@ function filterDataCompanyBySlug(rawData, company) {
 export async function getStaticPaths() {
   const rawData = require("../../public/data/raw/1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4.json");
   const countBySlugName = new Map();
-  rawData.forEach(([, company], index) => {
-    if (index < 2 || !isValidAsRegExp(company)) {
+  rawData.forEach((list, index) => {
+    if (index < 2 || !isValidName(list[1])) {
       return;
     }
+    const company = toSlug(list[1]);
     countBySlugName.set(company, 1 + (countBySlugName.get(company) || 0));
   });
   return {
     paths: [...countBySlugName.entries()]
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 300)
       .map(([company, count]) => ({
         params: { company },
       })),
