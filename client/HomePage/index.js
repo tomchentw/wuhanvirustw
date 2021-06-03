@@ -1,10 +1,19 @@
 import * as Chakra from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import * as React from "react";
-import Loading from "./Loading";
-import SheetData from "./SheetData";
+import Loading from "../Loading";
+import Store from "../Store";
+import SheetTable from "../SheetTable";
 
 export default function Home() {
+  const { q5Y5hWData } = React.useContext(Store);
+  const lastEntryDatetime = React.useMemo(() => {
+    if (!q5Y5hWData || q5Y5hWData.length === 0) {
+      return false;
+    }
+    return q5Y5hWData[q5Y5hWData.length - 1][0];
+  }, [q5Y5hWData]);
+
   return (
     <React.Fragment>
       <Chakra.Container as="header">
@@ -14,7 +23,15 @@ export default function Home() {
       </Chakra.Container>
 
       <Chakra.Container as="main" maxW="container.lg">
-        <SheetData />
+        {q5Y5hWData ? (
+          <SheetTable
+            lastEntryDatetime={lastEntryDatetime}
+            header={q5Y5hWData.slice(0, 2)}
+            data={q5Y5hWData.slice(2)}
+          />
+        ) : (
+          <Loading />
+        )}
       </Chakra.Container>
 
       <Chakra.Container as="footer" py={4} textAlign="right">

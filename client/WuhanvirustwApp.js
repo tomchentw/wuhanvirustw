@@ -3,11 +3,15 @@ import * as Chakra from "@chakra-ui/react";
 import Head from "next/head";
 import * as React from "react";
 import useSWR from "swr";
+import Store from "./Store";
 
-function fetcherText(...args) {
-  return fetch(...args).then((r) => r.text());
+function fetcherText(a, b) {
+  return fetch(a, b).then((r) => r.text());
 }
 
+function fetcherJson(a, b) {
+  return fetch(a, b).then((r) => r.json());
+}
 const theme = Chakra.extendTheme({
   fonts: {
     heading: `"Noto Sans TC", ${ChakraDefaultTheme.fonts.heading}`,
@@ -16,7 +20,7 @@ const theme = Chakra.extendTheme({
 });
 
 export default function WuhanvirustwApp({ Component, pageProps }) {
-  const { data: buildId, error } = useSWR(
+  const { data: buildId, error: buildIdError } = useSWR(
     `/wuhanvirustw/BUILD_ID`,
     fetcherText,
     {
@@ -31,6 +35,15 @@ export default function WuhanvirustwApp({ Component, pageProps }) {
     }
     prevBuildIdRef.current = buildId;
   }, [buildId, prevBuildIdRef]);
+  const { data: q5Y5hWData, error: q5Y5hWError } = useSWR(
+    `/wuhanvirustw/data/raw/1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4.json`,
+    fetcherJson,
+    {
+      refreshInterval: 5 * 60 * 1000,
+    }
+  );
+  const store = React.useMemo(() => ({ q5Y5hWData }), [q5Y5hWData]);
+
   return (
     <React.Fragment>
       <Head>
@@ -58,7 +71,9 @@ export default function WuhanvirustwApp({ Component, pageProps }) {
             </Chakra.Container>
           </Chakra.Box>
         </Chakra.Collapse>
-        <Component {...pageProps} />
+        <Store.Provider value={store}>
+          <Component {...pageProps} />
+        </Store.Provider>
       </Chakra.ChakraProvider>
     </React.Fragment>
   );
