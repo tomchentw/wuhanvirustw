@@ -1,1 +1,0 @@
-self.__SSG_MANIFEST=new Set(["\u002Fcompany\u002F[encodedSlug]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()
