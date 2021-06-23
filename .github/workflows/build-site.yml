@@ -8,7 +8,6 @@ on:
 jobs:
   build-gh-pages:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
         with:
@@ -26,21 +25,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-
       - run: pnpm install --frozen-lockfile
-      - name: TEMP Copy gh-pages data
-        run: |
-          git restore --source=origin/gh-pages data
-          mv data public/data
       - run: pnpm build
-      - name: Copy gh-pages files
-        run: |
-          cp -R .github out/.github
-          rm -rf out/data
-          git restore --source=origin/gh-pages data
-          mv data out/data
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        if: github.ref == 'refs/heads/main'
-        with:
-          exclude_assets: '' # Ensure .github folder is published
-          github_token: ${{ secrets.GITHUB_TOKEN }} # Do NOT use PERSONAL_TOKEN here since this will trigger infinite loop on exec-cron.yml
-          publish_dir: ./out
+        run: |
+          git config user.name 'Tom Chen'
+          git config user.email 'developer@tomchentw.com'
+          git add -f out
+          git stash
+          git switch gh-pages
+          git rm -rf .
+          git clean -fd
+          git stash pop
+          git mv out/* .
+          git fetch --all
+          git restore --source=origin/main .github
+          git restore --source=origin/gh-pages data
+          git add -A
+          git commit -m "deploy: $GITHUB_SHA"
+          git push
