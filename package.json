@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "prepare": "husky install",
-    "cron": "TZ='Asia/Taipei' node server/cron.mjs",
+    "cron": ". server/prepare.sh && TZ='Asia/Taipei' node server/cron.mjs",
     "dev": ". server/prepare.sh && next dev",
     "build": ". server/prepare.sh && next build && next export && . server/teardown.sh",
     "start": "next start"
