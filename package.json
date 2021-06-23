@@ -6,7 +6,7 @@
     "prepare": "husky install",
     "cron": "TZ='Asia/Taipei' node server/cron.mjs",
     "dev": "next dev",
-    "build": "next build && next export",
+    "build": "next build && next export && rm -rf out/data",
     "start": "next start"
   },
   "dependencies": {},
