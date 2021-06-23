@@ -4,7 +4,11 @@ import { useRouter } from "next/router";
 import Loading from "../Loading";
 import Store from "../Store";
 import SheetTable from "../SheetTable";
-import { isValidName, toSlug } from "../companyUtil";
+import {
+  getSortedCompanyNameCountPairList,
+  isValidName,
+  toSlug,
+} from "../companyUtil";
 
 export default function CompanyBySlugPage({ initialData }) {
   const {
@@ -59,20 +63,13 @@ function filterDataCompanyBySlug(rawData, company) {
 
 export async function getStaticPaths() {
   const rawData = require("../../public/data/raw/1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4.json");
-  const countBySlugName = new Map();
-  rawData.forEach((list, index) => {
-    if (index < 2 || !isValidName(list[1])) {
-      return;
-    }
-    const company = toSlug(list[1]);
-    countBySlugName.set(company, 1 + (countBySlugName.get(company) || 0));
-  });
+  const sortedCompanyNameCountPairList =
+    getSortedCompanyNameCountPairList(rawData);
+
   return {
-    paths: [...countBySlugName.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .map(([company, count]) => ({
-        params: { company },
-      })),
+    paths: sortedCompanyNameCountPairList.map(([company, count]) => ({
+      params: { company },
+    })),
     fallback: false,
   };
 }
