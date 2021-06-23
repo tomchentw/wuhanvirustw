@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "prepare": "husky install",
-    "crawl": "node server/prepare.mjs && TZ='Asia/Taipei' node server/crawl.mjs",
-    "dev": "node server/prepare.mjs && next dev",
-    "build": "node server/prepare.mjs && next build && next export",
+    "cron": "TZ='Asia/Taipei' node server/cron.mjs",
+    "dev": "next dev",
+    "build": "next build && next export",
     "start": "next start"
   },
   "dependencies": {},

@@ -1,5 +1,11 @@
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import spawn from "cross-spawn";
+import crawl from "./crawl.mjs";
 import logger from "./logger.mjs";
+
+const DIRNAME = path.dirname(fileURLToPath(import.meta.url));
 
 async function run() {
   // Prepare data folder to work with
@@ -11,10 +17,14 @@ async function run() {
     stdio: "inherit",
   });
   spawn.sync("mv", ["data", "public/data"], { stdio: "inherit" });
+
+  await crawl();
 }
 
 run()
-  .then(() => {})
+  .then((it) => {
+    logger.info("Done!");
+  })
   .catch((error) => {
     logger.fatal(error);
   });
