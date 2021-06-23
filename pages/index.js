@@ -1,1 +1,1 @@
-export { default } from "../client/HomePage";
+export { default, getStaticProps } from "../client/HomePage";

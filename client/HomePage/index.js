@@ -2,15 +2,22 @@ import * as Chakra from "@chakra-ui/react";
 import * as React from "react";
 import Loading from "../Loading";
 import Store from "../Store";
-import SheetTable from "../SheetTable";
+import CompanyGrid from "../CompanyGrid";
+import { getSortedCompanyNameCountPairList } from "../companyUtil";
 
-export default function Home() {
+export default function Home({ defaultSortedCompanyNameCountPairList }) {
   const { q5Y5hWData } = React.useContext(Store);
   const lastEntryDatetime = React.useMemo(() => {
     if (!q5Y5hWData || q5Y5hWData.length === 0) {
       return false;
     }
     return q5Y5hWData[q5Y5hWData.length - 1][0];
+  }, [q5Y5hWData]);
+  const sortedCompanyNameCountPairList = React.useMemo(() => {
+    if (!q5Y5hWData || q5Y5hWData.length === 0) {
+      return defaultSortedCompanyNameCountPairList;
+    }
+    return getSortedCompanyNameCountPairList(q5Y5hWData);
   }, [q5Y5hWData]);
 
   return (
@@ -22,15 +29,10 @@ export default function Home() {
       </Chakra.Container>
 
       <Chakra.Container as="main" maxW="container.lg">
-        {q5Y5hWData ? (
-          <SheetTable
-            lastEntryDatetime={lastEntryDatetime}
-            header={q5Y5hWData.slice(0, 2)}
-            data={q5Y5hWData.slice(2)}
-          />
-        ) : (
-          <Loading />
-        )}
+        <CompanyGrid
+          lastEntryDatetime={lastEntryDatetime}
+          sortedCompanyNameCountPairList={sortedCompanyNameCountPairList}
+        />
       </Chakra.Container>
 
       <Chakra.Container as="footer" py={4} textAlign="right">
@@ -47,4 +49,16 @@ export default function Home() {
       </Chakra.Container>
     </React.Fragment>
   );
+}
+
+export async function getStaticProps() {
+  const rawData = require("../../public/data/raw/1q5Y5hWgQJPfIk9VhSYnSZ3ENZz9UIF03NzSusgpg6F4.json");
+  const defaultSortedCompanyNameCountPairList =
+    getSortedCompanyNameCountPairList(rawData);
+
+  return {
+    props: {
+      defaultSortedCompanyNameCountPairList,
+    },
+  };
 }
