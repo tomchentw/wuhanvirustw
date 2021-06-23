@@ -5,8 +5,8 @@
   "scripts": {
     "prepare": "husky install",
     "cron": "TZ='Asia/Taipei' node server/cron.mjs",
-    "dev": "next dev",
-    "build": "next build && next export && rm -rf out/data",
+    "dev": ". server/prepare.sh && next dev",
+    "build": ". server/prepare.sh && next build && next export && . server/teardown.sh",
     "start": "next start"
   },
   "dependencies": {},

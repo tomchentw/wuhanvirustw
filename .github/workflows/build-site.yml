@@ -25,10 +25,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-
       - run: pnpm install --frozen-lockfile
-      - name: TEMP Copy gh-pages data
-        run: |
-          git restore --source=origin/gh-pages data
-          mv data public/data
       - run: pnpm build
       - name: Deploy to GitHub Pages
         run: |
